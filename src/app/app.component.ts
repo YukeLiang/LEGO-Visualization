@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StacksComponent } from './stacks/stacks.component';
 
 @Component({
   selector: 'app-root',
