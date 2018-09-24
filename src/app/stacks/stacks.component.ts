@@ -14,18 +14,14 @@ import { Margin, Data, RGB_COLORS } from '../shared/classes';
 })
 export class StacksComponent implements OnInit {
 
-  private title :string = 'LEGO VISUALIZATION';
+  private block_height = 30;
+  private block_width = 120;
   private sheetData: Data[];
-
   private margin: Margin;
   private padding: Margin;
 
 
   private svg: any;     // TODO replace all `any` by the right type
-
-  private layers: string[] = [];
-  private stack: any;
- 
   private g: any;
 
 
@@ -33,7 +29,7 @@ export class StacksComponent implements OnInit {
 
 
 
-  public colorLayers(eachStack: Data) { 
+  public colorLayers(eachStack: Data): string[] { 
     let color_map = new Map([
       ['Red', RGB_COLORS.Red],
       ['Black', RGB_COLORS.Black],
@@ -49,34 +45,37 @@ export class StacksComponent implements OnInit {
       ['Yellow', RGB_COLORS.Yellow]
   ]);
 
+  let layers: string[] = [];
+
     if(eachStack.age.search('up')){
-      this.layers.push(color_map.get('Green'));    // green, replaced by rgb number
+      layers.push(color_map.get('Green'));    // green, replaced by rgb number
     }else{
-      this.layers.push(color_map.get('Green'));    // black
+      layers.push(color_map.get('Green'));    // black
     }
 
     if(eachStack.gender.search('Female')){
-      this.layers.push(color_map.get('Yellow'));
+      layers.push(color_map.get('Yellow'));
     }else{
-      this.layers.push(color_map.get('Orange'));
+      layers.push(color_map.get('Orange'));
     }
 
     for(let color of eachStack.colors){
-      this.layers.push(color_map.get(color));
+      layers.push(color_map.get(color));
     }
-    console.log(this.layers);
+    console.log(layers);
+
+    return layers;
   }
 
 
-  public buildStack(){
-    let block_height = 30;
-    let block_width = 120;
+  public buildStack(leftStart: number, layers: string[]){
+
     let n = this.margin.top;
-    for(let color of this.layers){
-      this.g.append('rect')
-              .attr('width', block_width)
-              .attr('height', block_height)
-              .attr('transform', 'translate(' + this.margin.left + ',' + n + ')')
+    for(let color of layers){
+      this.svg.append('rect')
+              .attr('width', this.block_width)
+              .attr('height', this.block_height)
+              .attr('transform', 'translate(' + leftStart + ',' + n + ')')
               .attr('fill', color)
               .attr('stroke', '#FFE4E1')
               .attr('stroke-width', 2.5);
@@ -84,11 +83,9 @@ export class StacksComponent implements OnInit {
     }
   }
 
-
-
 private initSvg() {
-  this.margin = {top: 20, right: 20, bottom: 30, left: 40};
-  this.padding = {top: 20, right: 20, bottom: 30, left: 40};
+  this.margin = {top: 20, right: 20, bottom: 20, left: 20};
+  this.padding = {top: 20, right: 20, bottom: 20, left: 20};
   this.svg = d3.select('svg');
 
   this.svg.attr('width', this.svg.attr('width') - this.margin.left - this.margin.right)
@@ -103,28 +100,35 @@ public loadData() {
   .subscribe(data => {
     this.sheetData = data.surveys;
     console.log(this.sheetData);
-    this.colorLayers(this.sheetData[0]);
-    this.buildStack();
+    this.lineUp();
   });
 }
 
-public appear(){
+public lineUp(){
+  let nextLeftStart = this.margin.left;
+  for(let stack of this.sheetData){
+    let layer = this.colorLayers(stack);
+    this.buildStack(nextLeftStart, layer);
+    nextLeftStart += this.block_width + 40;
+  }
+}
+
+public title_appear(){
   let animateName: string = 'animated flipInX';
-  //let animationend = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
   d3.select('h1').attr('class', animateName);
 }
 
-public disappear(){
+public title_disappear(){
   let animateName: string = 'animated flipOutX';
-  //let animationend = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
   d3.select('h1').attr('class', animateName);
 }
+
 
   ngOnInit() {
     this.loadData();
     this.initSvg();
-    setInterval(() => this.appear(),500);
-    setInterval(() => this.disappear(), 4000);
+    setInterval(() => this.title_appear(),500);
+    setInterval(() => this.title_disappear(), 4000);
   } 
 
 }
