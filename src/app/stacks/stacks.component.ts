@@ -76,9 +76,8 @@ export class StacksComponent implements OnInit {
               .attr('width', this.block_width)
               .attr('height', this.block_height)
               .attr('transform', 'translate(' + leftStart + ',' + n + ')')
-              .attr('fill', color)
-              .attr('stroke', '#FFE4E1')
-              .attr('stroke-width', 2.5);
+              .attr('fill', color);
+
       n += 30;
     }
   }
@@ -109,7 +108,7 @@ public lineUp(){
   for(let stack of this.sheetData){
     let layer = this.colorLayers(stack);
     this.buildStack(nextLeftStart, layer);
-    nextLeftStart += this.block_width + 40;
+    nextLeftStart += this.block_width;
   }
 }
 
