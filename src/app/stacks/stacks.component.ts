@@ -14,15 +14,17 @@ import { Margin, Data, RGB_COLORS } from '../shared/classes';
 })
 export class StacksComponent implements OnInit {
 
-  private block_height = 30;
-  private block_width = 120;
+  private block_height: number = 30;
+  private block_width: number = 100;
+
+  private canvas_height: number;
+  private canvas_width: number;
+  private maxStacksCapacity: number;
+  private curr_scale: number = 1;
   private sheetData: Data[];
   private margin: Margin;
-  private padding: Margin;
 
-
-  private svg: any;     // TODO replace all `any` by the right type
-  private g: any;
+  private svg: any;    
 
 
   constructor(private _dataProvider: GoogleSheetService) {}
@@ -33,7 +35,7 @@ export class StacksComponent implements OnInit {
     let color_map = new Map([
       ['Red', RGB_COLORS.Red],
       ['Black', RGB_COLORS.Black],
-      ['Blue', RGB_COLORS.Blue],
+      ['Blue', RGB_COLORS.Blue], 
       ['Brown', RGB_COLORS.Brown],
       ['Green', RGB_COLORS.Green],
       ['Grey', RGB_COLORS.Grey],
@@ -70,46 +72,61 @@ export class StacksComponent implements OnInit {
 
   public buildStack(leftStart: number, layers: string[]){
 
-    let n = this.margin.top;
+    let nextTopStart = this.margin.top;
     for(let color of layers){
       this.svg.append('rect')
               .attr('width', this.block_width)
               .attr('height', this.block_height)
-              .attr('transform', 'translate(' + leftStart + ',' + n + ')')
+              .attr('transform', 'translate(' + leftStart + ',' + nextTopStart + ')')
               .attr('fill', color);
 
-      n += 30;
+      nextTopStart += this.block_height;
     }
   }
 
-private initSvg() {
-  this.margin = {top: 20, right: 20, bottom: 20, left: 20};
-  this.padding = {top: 20, right: 20, bottom: 20, left: 20};
+public initSvg() {
+  this.margin = {top: 30, right: 30, bottom: 30, left: 30};
   this.svg = d3.select('svg');
 
   this.svg.attr('width', this.svg.attr('width') - this.margin.left - this.margin.right)
           .attr('height', this.svg.attr('height') - this.margin.top - this.margin.bottom);
-
- this.g = this.svg.append('g').attr('transform', 'translate(' + this.padding.left + ',' + this.padding.top + ')');
+  this.canvas_height = this.svg.height;
+  this.canvas_width = this.svg.width;
 }
+
 
 
 public loadData() {
   this._dataProvider.loadData()
   .subscribe(data => {
     this.sheetData = data.surveys;
-    console.log(this.sheetData);
-    this.lineUp();
+    this.buildGroup();
   });
 }
 
-public lineUp(){
+public buildGroup(){
   let nextLeftStart = this.margin.left;
+  
   for(let stack of this.sheetData){
-    let layer = this.colorLayers(stack);
-    this.buildStack(nextLeftStart, layer);
+    this.buildStack(nextLeftStart, this.colorLayers(stack));
     nextLeftStart += this.block_width;
   }
+}
+
+public initMaxCapacity(){
+  this.maxStacksCapacity = this.canvas_height/(this.curr_scale * this.block_height)
+                         * this.canvas_width/(this.curr_scale * this.block_width);
+}
+
+public initScale(){
+  if(this.sheetData != null){
+    if(this.sheetData.length > this.maxStacksCapacity) {
+  }
+  }
+}
+
+public updateScale(){
+
 }
 
 public title_appear(){
@@ -121,7 +138,6 @@ public title_disappear(){
   let animateName: string = 'animated flipOutX';
   d3.select('h1').attr('class', animateName);
 }
-
 
   ngOnInit() {
     this.loadData();
