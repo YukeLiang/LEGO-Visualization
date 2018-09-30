@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Shape from 'd3-shape';
 import * as d3Scale from 'd3-scale';
+import * as d3Axis from 'd3-axis';
 
 import { GoogleSheetService } from '../shared/google-sheet.service';
 import { Margin, Data, RGB_COLORS } from '../shared/classes';
@@ -19,12 +20,11 @@ export class StacksComponent implements OnInit {
 
   private canvas_height: number;
   private canvas_width: number;
-  private maxStacksCapacity: number;
-  private curr_scale: number = 1;
   private sheetData: Data[];
   private margin: Margin;
 
   private svg: any;    
+
 
 
   constructor(private _dataProvider: GoogleSheetService) {}
@@ -73,8 +73,9 @@ export class StacksComponent implements OnInit {
   public buildStack(leftStart: number, layers: string[]){
 
     let nextTopStart = this.margin.top;
+    let group = this.svg.append('g');
     for(let color of layers){
-      this.svg.append('rect')
+         group.append('rect')
               .attr('width', this.block_width)
               .attr('height', this.block_height)
               .attr('transform', 'translate(' + leftStart + ',' + nextTopStart + ')')
@@ -92,40 +93,34 @@ public initSvg() {
           .attr('height', this.svg.attr('height') - this.margin.top - this.margin.bottom);
   this.canvas_height = this.svg.height;
   this.canvas_width = this.svg.width;
-}
 
+}
 
 
 public loadData() {
   this._dataProvider.loadData()
   .subscribe(data => {
+    console.log(data);
     this.sheetData = data.surveys;
-    this.buildGroup();
+    this.buildGroup()
   });
 }
 
+public 
+
 public buildGroup(){
   let nextLeftStart = this.margin.left;
-  
+
   for(let stack of this.sheetData){
+    console.log("stack is" + stack);
     this.buildStack(nextLeftStart, this.colorLayers(stack));
     nextLeftStart += this.block_width;
   }
 }
 
-public initMaxCapacity(){
-  this.maxStacksCapacity = this.canvas_height/(this.curr_scale * this.block_height)
-                         * this.canvas_width/(this.curr_scale * this.block_width);
-}
-
-public initScale(){
-  if(this.sheetData != null){
-    if(this.sheetData.length > this.maxStacksCapacity) {
-  }
-  }
-}
-
-public updateScale(){
+public rolling(leftStart: number){
+  d3.selectAll('g')
+    .attr('transform', 'translate(' + (leftStart-30) + ')');
 
 }
 

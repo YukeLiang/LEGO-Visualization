@@ -11,12 +11,8 @@ import { Data } from '../shared/classes';
 })
 export class GoogleSheetService {
 
-  // private _preFix: string = 'https://spreadsheet.google/feeds/list/';
-  // private _sheetID: string = '1ddMERW93PAaj7D-8sHnFJv99w28d0Pg9vlMn9ke_qF4';
-  // private _postFix: string = '/od6/public/values?alt=json';
-
-  private _sheetUrl: string = 'https://script.google.com/macros/s/AKfycbxUH2DfUsBKMK8ZIU0uppQH7IY7nIA2un6RrFSUqtpqcpvQiZph/exec';
-
+  private _sheetUrl: string = 'https://script.google.com/macros/s/AKfycbwtrF0otHm0yKXb_K8n4tr37EJjR8BJBvkoOkFw5xbW2-HL8pMF/exec';
+// 2nd is test
   constructor(private _http: HttpClient) { }
 
   public loadData(): Observable<any> {
