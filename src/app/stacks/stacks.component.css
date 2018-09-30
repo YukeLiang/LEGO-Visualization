@@ -20,12 +20,12 @@ div h1 {
 }
 
 #question {
-  animation: type 3s steps(22);
+  animation: type 3s steps(22) infinite;
   border-right: 4px solid black;
   overflow: hidden;
   white-space: nowrap;
 }
 @keyframes type {
   0% { width: 0ch }
-  100% { width: 20ch}
+  100% { width: 30ch}
 }
