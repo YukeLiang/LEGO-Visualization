@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-import * as d3Shape from 'd3-shape';
-import * as d3Scale from 'd3-scale';
-import * as d3Axis from 'd3-axis';
 
 import { GoogleSheetService } from '../shared/google-sheet.service';
 import { Margin, Data, RGB_COLORS } from '../shared/classes';
@@ -84,7 +81,8 @@ public initSvg(svg_width: number) {
   this.margin = {top: 30, right: 30, bottom: 30, left: 30};
   this.svg = d3.select('svg');  
 
-  this.svg.attr('width', svg_width * this.block_width);
+  this.svg.attr('width', svg_width * this.block_width)
+          .attr('transform', 'translate(' + screen.availWidth + ',' + 0 + ')');
 
 }
 

@@ -16,7 +16,7 @@ div h1 {
 
 @keyframes move_left{
   0% { transform: translateX(0) }
-  100% { transform: translateX(-170%) }
+  100% { transform: translateX(-253%) }
 }
 
 #question {
