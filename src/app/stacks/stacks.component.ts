@@ -17,9 +17,6 @@ export class StacksComponent implements OnInit {
 
   private block_height: number = 30;
   private block_width: number = 100;
-
-  private canvas_height: number;
-  private canvas_width: number;
   private sheetData: Data[];
   private margin: Margin;
 
@@ -64,8 +61,6 @@ export class StacksComponent implements OnInit {
     for(let color of eachStack.colors){
       layers.push(color_map.get(color));
     }
-    console.log(layers);
-
     return layers;
   }
 
@@ -85,14 +80,11 @@ export class StacksComponent implements OnInit {
     }
   }
 
-public initSvg() {
+public initSvg(svg_width: number) {
   this.margin = {top: 30, right: 30, bottom: 30, left: 30};
-  this.svg = d3.select('svg');
+  this.svg = d3.select('svg');  
 
-  this.svg.attr('width', this.svg.attr('width') - this.margin.left - this.margin.right)
-          .attr('height', this.svg.attr('height') - this.margin.top - this.margin.bottom);
-  this.canvas_height = this.svg.height;
-  this.canvas_width = this.svg.width;
+  this.svg.attr('width', svg_width * this.block_width);
 
 }
 
@@ -100,29 +92,22 @@ public initSvg() {
 public loadData() {
   this._dataProvider.loadData()
   .subscribe(data => {
-    console.log(data);
     this.sheetData = data.surveys;
+    this.initSvg(data.surveys.length);
     this.buildGroup()
   });
 }
-
-public 
+ 
 
 public buildGroup(){
-  let nextLeftStart = this.margin.left;
+  let nextLeftStart = 0;
 
   for(let stack of this.sheetData){
-    console.log("stack is" + stack);
     this.buildStack(nextLeftStart, this.colorLayers(stack));
     nextLeftStart += this.block_width;
   }
 }
 
-public rolling(leftStart: number){
-  d3.selectAll('g')
-    .attr('transform', 'translate(' + (leftStart-30) + ')');
-
-}
 
 public title_appear(){
   let animateName: string = 'animated flipInX';
@@ -136,7 +121,6 @@ public title_disappear(){
 
   ngOnInit() {
     this.loadData();
-    this.initSvg();
     setInterval(() => this.title_appear(),500);
     setInterval(() => this.title_disappear(), 4000);
   } 

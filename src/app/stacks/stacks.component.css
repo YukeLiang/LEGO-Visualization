@@ -3,10 +3,29 @@ div h1 {
   font-family: sans-serif;
 }
 
-svg {
+#lego_block {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  -webkit-animation: move_left 30s infinite;
+  -moz-animation: move_left 30s infinite;
+  -o-animation: move_left 30s infinite;
+  animation: move_left 30s infinite;
 }
 
 
+@keyframes move_left{
+  0% { transform: translateX(0) }
+  100% { transform: translateX(-170%) }
+}
+
+#question {
+  animation: type 3s steps(22);
+  border-right: 4px solid black;
+  overflow: hidden;
+  white-space: nowrap;
+}
+@keyframes type {
+  0% { width: 0ch }
+  100% { width: 20ch}
+}

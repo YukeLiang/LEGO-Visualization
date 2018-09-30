@@ -26,10 +26,25 @@ export enum RGB_COLORS{
     Pink = '#FFC0CB',
     Purple = '#800080',
     White = '#FFFFFF',
-    Yellow = '#FFFF00',
-
-    
+    Yellow = '#FFFF00'
 }
 
 
+export let questions = [
+    'What color shirt are you wearing?',
+    'What color are your eyes?',
+    'What color is your favorite food?',
+    'What is your favorite color?',
+    'What color is your favorite song?',
+    'What color is boredom?',
+    'What color is the sky right now?',
+    'What color is hope?',
+    'What color is peace?',
+    'What color is calm?',
+    'What color is friendship?',
+    'What color is courage?',
+    'What color is love?',
+    'What color is anger?',
+    'What color is death?'
+];
 
