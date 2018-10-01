@@ -29,3 +29,8 @@ div h1 {
   0% { width: 0ch }
   100% { width: 30ch}
 }
+
+svg g:hover {
+  height: 40px;
+  width: 120px;
+}
