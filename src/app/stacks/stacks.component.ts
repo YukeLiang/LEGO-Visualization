@@ -12,8 +12,8 @@ import { Margin, Data, RGB_COLORS } from '../shared/classes';
 })
 export class StacksComponent implements OnInit {
 
-  private block_height: number = 30;
-  private block_width: number = 100;
+  private block_height: number = 30% screen.height;
+  private block_width: number = 50% screen.width ;
   private sheetData: Data[];
   private margin: Margin;
 
@@ -28,7 +28,7 @@ export class StacksComponent implements OnInit {
   public colorLayers(eachStack: Data): string[] { 
     let color_map = new Map([
       ['Red', RGB_COLORS.Red],
-      ['Black', RGB_COLORS.Black],
+      ['Black', RGB_COLORS.Black], 
       ['Blue', RGB_COLORS.Blue], 
       ['Brown', RGB_COLORS.Brown],
       ['Green', RGB_COLORS.Green],
@@ -43,10 +43,12 @@ export class StacksComponent implements OnInit {
 
   let layers: string[] = [];
 
-    if(eachStack.age.search('up')){
+    if(eachStack.age == 'Age 21 and up  (Green)'){
       layers.push(color_map.get('Green'));    // green, replaced by rgb number
+    }else if(eachStack.age == 'Age 6 - 10   (Blue)'){
+      layers.push(color_map.get('Blue'));
     }else{
-      layers.push(color_map.get('Green'));    // black
+      layers.push(color_map.get('Yellow'));
     }
 
     if(eachStack.gender.search('Female')){
@@ -91,6 +93,7 @@ public loadData() {
   this._dataProvider.loadData()
   .subscribe(data => {
     this.sheetData = data.surveys;
+    console.log(data.surveys);
     this.initSvg(data.surveys.length);
     this.buildGroup()
   });
