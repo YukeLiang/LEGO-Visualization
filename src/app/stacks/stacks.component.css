@@ -1,36 +1,50 @@
 div h1 {
   text-align: center;
   font-family: sans-serif;
-}
-
-#lego_block {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  -webkit-animation: move_left 30s infinite;
-  -moz-animation: move_left 30s infinite;
-  -o-animation: move_left 30s infinite;
-  animation: move_left 30s infinite;
-}
-
-
-@keyframes move_left{
-  0% { transform: translateX(0) }
-  100% { transform: translateX(-253%) }
-}
-
-#question {
-  animation: type 3s steps(22) infinite;
+  font-size: 250%;
+  animation: type 8s steps(40) infinite;
   border-right: 4px solid black;
   overflow: hidden;
   white-space: nowrap;
 }
-@keyframes type {
-  0% { width: 0ch }
-  100% { width: 30ch}
+
+
+
+#img1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-animation: move_left 50s infinite;
+  -moz-animation: move_left 50s infinite;
+  -o-animation: move_left 50s infinite;
+  animation: move_left 50s infinite;
+
 }
 
-svg g:hover {
-  height: 40px;
-  width: 120px;
+#img2 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-animation: move_left 50s infinite;
+  -moz-animation: move_left 50s infinite;
+  -o-animation: move_left 50s infinite;
+  animation: move_left 50s infinite;
+}
+
+#img1:hover {
+  animation-play-state: paused;
+}
+
+#img2:hover {
+  animation-play-state: paused;
+}
+
+@keyframes move_left{
+  0% { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
+
+@keyframes type {
+  0% { width: 0ch }
+  100% { width: 40ch}
 }

@@ -12,12 +12,17 @@ import { Margin, Data, RGB_COLORS } from '../shared/classes';
 })
 export class StacksComponent implements OnInit {
 
-  private block_height: number = 30% screen.height;
-  private block_width: number = 50% screen.width ;
+
+  private svg_width: number;
+  private svg_height:  number = 0.4 * screen.height;
+  private block_height: number = 0.05 * this.svg_height;
+  private block_width: number =  2.5 * this.block_height;
   private sheetData: Data[];
   private margin: Margin;
 
-  private svg: any;    
+  private svg_1: any;
+  private svg_2: any;  
+  private svg_3: any; 
 
 
 
@@ -64,28 +69,51 @@ export class StacksComponent implements OnInit {
   }
 
 
-  public buildStack(leftStart: number, layers: string[]){
 
-    let nextTopStart = this.margin.top;
-    let group = this.svg.append('g');
+  public buildGroup(){
+    let nextLeftStart = 0;
+    let groupNum = 0;
+    for(let i = 0; i < this.sheetData.length; i++){
+      if(i % 6 > 2){
+        groupNum = 2;
+      }else {
+        groupNum = 1;
+      }
+      this.buildStack(nextLeftStart, this.colorLayers(this.sheetData[i]),groupNum);
+      nextLeftStart += this.block_width;
+    }
+  }
+  
+
+  public buildStack(leftStart: number, layers: string[], groupNum: any){
+    let nextTopStart = 0;
+    let group = this.svg_1.append('g');
+    if(groupNum == 2){
+      group = this.svg_2.append('g');
+    }
     for(let color of layers){
          group.append('rect')
               .attr('width', this.block_width)
               .attr('height', this.block_height)
               .attr('transform', 'translate(' + leftStart + ',' + nextTopStart + ')')
               .attr('fill', color);
-
+         
       nextTopStart += this.block_height;
     }
   }
 
-public initSvg(svg_width: number) {
-  this.margin = {top: 30, right: 30, bottom: 30, left: 30};
-  this.svg = d3.select('svg');  
 
-  this.svg.attr('width', svg_width * this.block_width)
-          .attr('transform', 'translate(' + screen.availWidth + ',' + 0 + ')');
 
+public initSvg(num_col: number) {
+  this.svg_1 = d3.select('#img1');  
+  this.svg_1.attr('width', num_col * this.block_width)
+          .attr('height', this.svg_height);
+  this.svg_width = this.svg_1.width;
+
+
+  this.svg_2 = d3.select('#img2'); 
+  this.svg_2.attr('width', num_col * this.block_width)
+  .attr('height', this.svg_height);
 }
 
 
@@ -94,36 +122,14 @@ public loadData() {
   .subscribe(data => {
     this.sheetData = data.surveys;
     console.log(data.surveys);
-    this.initSvg(data.surveys.length);
-    this.buildGroup()
+    this.initSvg(data.surveys.length / 2);
+    this.buildGroup();
   });
 }
- 
 
-public buildGroup(){
-  let nextLeftStart = 0;
-
-  for(let stack of this.sheetData){
-    this.buildStack(nextLeftStart, this.colorLayers(stack));
-    nextLeftStart += this.block_width;
-  }
-}
-
-
-public title_appear(){
-  let animateName: string = 'animated flipInX';
-  d3.select('h1').attr('class', animateName);
-}
-
-public title_disappear(){
-  let animateName: string = 'animated flipOutX';
-  d3.select('h1').attr('class', animateName);
-}
 
   ngOnInit() {
     this.loadData();
-    setInterval(() => this.title_appear(),500);
-    setInterval(() => this.title_disappear(), 4000);
   } 
 
 }
