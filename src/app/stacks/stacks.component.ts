@@ -13,20 +13,20 @@ import { Margin, Data, RGB_COLORS } from '../shared/classes';
 export class StacksComponent implements OnInit {
 
 
-  private svg_width: number;
-  private svg_height:  number = 0.3 * screen.height;
-  private block_height: number = 0.05 * this.svg_height;
+  private svg_width: number = screen.width;
+  private svg_height:  number = screen.height * 0.93;
+  private block_height: number = this.svg_height / 4 / 19;
   private block_width: number =  2 * this.block_height;
-  private sheetData: Data[];
-  private margin: Margin;
+  private row_height: number = this.svg_height / 4;
+
 
   private svg_1: any;
 
+  private sheetData: Data[];
 
 
 
   constructor(private _dataProvider: GoogleSheetService) {}
-
 
 
   public colorLayers(eachStack: Data): string[] { 
@@ -70,20 +70,36 @@ export class StacksComponent implements OnInit {
 
 
   public buildGroup(){
-    let nextLeftStart = 0;    
+    let nextLeftStart = 0; 
+    let nextTopStart = 0;
+    let count = 0;
+    let nextGroupNum = Math.floor(Math.random() * 6) + 2;
 
     for(let i = 0; i < this.sheetData.length; i++){
-      this.buildStack(nextLeftStart, this.colorLayers(this.sheetData[i]));
-      nextLeftStart += this.block_width;      
+      this.buildStack(nextLeftStart, nextTopStart, this.colorLayers(this.sheetData[i]));
+      //next Group
+      if(count == nextGroupNum){
+        nextLeftStart += 3 * this.block_width;
+        nextGroupNum = Math.floor(Math.random() * 8) + 3;
+        count = 0;
+      }else{
+        nextLeftStart += this.block_width; 
+      }
+      count ++;
+
+      // Next Row
+      if(nextLeftStart >= this.svg_width){
+        nextLeftStart = 0;
+        nextTopStart += this.row_height;
+      }
     }
   }
   
 
-  public buildStack(leftStart: number, layers: string[]){
-    let nextTopStart = 0;
-    let group = this.svg_1.append('g');
+  public buildStack(leftStart: number, nextTopStart:number, layers: string[]){
    
     for(let color of layers){
+      let group = this.svg_1.append('g');
          group.append('rect')
               .attr('width', this.block_width)
               .attr('height', this.block_height)
@@ -98,9 +114,8 @@ export class StacksComponent implements OnInit {
 
 public initSvg(num_col: number) {
   this.svg_1 = d3.select('#img1');  
-  this.svg_1.attr('width', num_col * this.block_width)
+  this.svg_1.attr('width', this.svg_width)
           .attr('height', this.svg_height);
-  this.svg_width = this.svg_1.width;
 
 }
 
@@ -109,7 +124,6 @@ public loadData() {
   this._dataProvider.loadData()
   .subscribe(data => {
     this.sheetData = data.surveys;
-    console.log(data.surveys);
     this.initSvg(data.surveys.length / 3);
     this.buildGroup();
   });
