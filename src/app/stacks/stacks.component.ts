@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 import { GoogleSheetService } from '../shared/google-sheet.service';
 import { Margin, Data, RGB_COLORS } from '../shared/classes';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class StacksComponent implements OnInit {
 
 
   private svg_width: number = screen.width;
-  private svg_height:  number = screen.height * 0.93;
+  private svg_height:  number = screen.height * 0.9;
   private block_height: number = this.svg_height / 4 / 19;
   private block_width: number =  2 * this.block_height;
   private row_height: number = this.svg_height / 4;
@@ -73,13 +74,13 @@ export class StacksComponent implements OnInit {
     let nextLeftStart = 0; 
     let nextTopStart = 0;
     let count = 0;
-    let nextGroupNum = Math.floor(Math.random() * 6) + 2;
+    let nextGroupNum = Math.floor(Math.random() * 8) + 2;
 
     for(let i = 0; i < this.sheetData.length; i++){
       this.buildStack(nextLeftStart, nextTopStart, this.colorLayers(this.sheetData[i]));
       //next Group
       if(count == nextGroupNum){
-        nextLeftStart += 3 * this.block_width;
+        nextLeftStart += 5 * this.block_width;
         nextGroupNum = Math.floor(Math.random() * 8) + 3;
         count = 0;
       }else{
@@ -90,7 +91,13 @@ export class StacksComponent implements OnInit {
       // Next Row
       if(nextLeftStart >= this.svg_width){
         nextLeftStart = 0;
-        nextTopStart += this.row_height;
+        let sepTopStart = nextTopStart + this.row_height;
+        this.svg_1.append('rect')
+                  .attr('width', screen.width)
+                  .attr('height', this.block_height)
+                  .attr('fill', '#B48D51')
+                  .attr('transform', 'translate(' + 0 + ',' + sepTopStart + ')');
+        nextTopStart += this.row_height + this.block_width;
       }
     }
   }
