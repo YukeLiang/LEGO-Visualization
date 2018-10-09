@@ -91,13 +91,13 @@ export class StacksComponent implements OnInit {
       // Next Row
       if(nextLeftStart >= this.svg_width){
         nextLeftStart = 0;
-        let sepTopStart = nextTopStart;
+        let sepTopStart = nextTopStart + this.row_height;
         this.svg_1.append('rect')
                   .attr('width', screen.width)
                   .attr('height', this.block_height)
                   .attr('fill', '#B48D51')
                   .attr('transform', 'translate(' + 0 + ',' + sepTopStart + ')');
-        nextTopStart += this.row_height + this.block_width;
+        nextTopStart += this.row_height + this.block_height;
       }
     }
   }
