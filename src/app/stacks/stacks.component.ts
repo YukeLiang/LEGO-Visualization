@@ -65,6 +65,7 @@ export class StacksComponent implements OnInit {
     for(let color of eachStack.colors){
       layers.push(color_map.get(color));
     }
+    layers.reverse();
     return layers;
   }
 
